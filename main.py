@@ -11,7 +11,7 @@ move_min_size = 2500
 face_detection_times = 3
 face_min_pixel = (120, 120)
 face_detection_interval = 500
-avg_adjustment = 0.2
+avg_adjustment = 0.02
 
 # 開啟網路攝影機
 webcam = cv2.VideoCapture(0)
@@ -27,7 +27,7 @@ area = width * height
 
 # 初始化平均影像
 ret, frame = webcam.read()
-avg = cv2.blur(frame, (4, 4))
+avg = cv2.blur(frame, blur_pixel)
 avg_float = np.float32(avg)
 
 # 調整平均值
@@ -35,7 +35,7 @@ for x in range(10):
   ret, frame = webcam.read()
   if ret == False:
     break
-  blur = cv2.blur(frame, (4, 4))
+  blur = cv2.blur(frame, blur_pixel)
   cv2.accumulateWeighted(blur, avg_float, 0.10)
   avg = cv2.convertScaleAbs(avg_float)
 
