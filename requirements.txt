@@ -1,5 +1,5 @@
 asgiref==3.2.3
-Django==3.0
+Django==3.0.3
 image==1.5.27
 numpy==1.17.4
 opencv-python==4.1.2.30
