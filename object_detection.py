@@ -7,6 +7,11 @@ import imutils
 import time
 import cv2
 
+# 設置參數
+interval = 200
+specific_object_name = "person"
+specific_object_minimum_confidence = 0.75
+
 # 構造參數解析並解析參數
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--prototxt", required=True,
@@ -29,7 +34,7 @@ COLORS = np.random.uniform(0, 255, size=(len(CLASSES), 3))
 net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
 
 # 初始化視頻
-vs = VideoStream(src=1).start()
+vs = VideoStream(src=0).start()
 # 攝像頭傳感器預熱
 time.sleep(2.0)
 # 初始化FPS計數器
@@ -62,20 +67,23 @@ while True:
 			box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
 			(startX, startY, endX, endY) = box.astype("int")
 
-			# 在框架上繪製
-			label = "{}: {:.2f}%".format(CLASSES[idx],
-				confidence * 100)
-			cv2.rectangle(frame, (startX, startY), (endX, endY),
-				COLORS[idx], 2)
-			y = startY - 15 if startY - 15 > 15 else startY + 15
-			cv2.putText(frame, label, (startX, y),
-				cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
+			# 選擇特定對象
+			label_name = CLASSES[idx]
+			label_confidence = confidence
+			if label_name == specific_object_name and label_confidence > specific_object_minimum_confidence:
+				# 在框架上繪製
+				label = "{}: {:.2f}%".format(CLASSES[idx],
+					confidence * 100)
+				cv2.rectangle(frame, (startX, startY), (endX, endY),
+					COLORS[idx], 2)
+				y = startY - 15 if startY - 15 > 15 else startY + 15
+				cv2.putText(frame, label, (startX, y),
+					cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
 
 	# 顯示偵測結果影像
 	cv2.imshow("Frame", frame)
-	key = cv2.waitKey(1) & 0xFF
 
-	if key == ord("q"):
+	if cv2.waitKey(interval) & 0xFF == ord('q'):
 		break
 
 	# 更新FPS計數器
