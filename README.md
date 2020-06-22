@@ -1,6 +1,24 @@
 # Face Counter
 The package attempts to count faces using face detection and motion detection. It will be used on vending machines to calculate product attention and get traffic at that location.
 
+# Usage
+Use face_counter.py
+```bash
+python face_counter.py
+```
+Use motion_detection.py
+```bash
+python motion_detection.py
+```
+Use transparent.py
+```bash
+python transparent.py
+```
+Use object_detection.py
+```bash
+python object_detection.py --prototxt data/MobileNetSSD/MobileNetSSD_deploy.prototxt.txt --model data/MobileNetSSD/MobileNetSSD_deploy.caffemodel
+```
+
 ## Parameters
 Overlay image enable (Boolean)
 ```
