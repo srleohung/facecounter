@@ -45,63 +45,65 @@ while True:
 	# 從視頻流中抓取幀並調整其大小
 	frame = vs.read()
 	if len(frame) > 0:
-		frame = imutils.resize(frame, width=720)
+		if len(frame[0]) > 0:
+			frame = imutils.resize(frame, width=720)
 
-		# 抓取框架尺寸並將其轉換為Blob
-		(h, w) = frame.shape[:2]
-		blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)),
-			0.007843, (300, 300), 127.5)
+			# 抓取框架尺寸並將其轉換為Blob
+			(h, w) = frame.shape[:2]
+			blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)),
+				0.007843, (300, 300), 127.5)
 
-		# 使Blob通過網絡並獲得檢測結果
-		net.setInput(blob)
-		detections = net.forward()
+			# 使Blob通過網絡並獲得檢測結果
+			net.setInput(blob)
+			detections = net.forward()
 
-		frameList = []
+			frameList = []
 
-		# 循環檢測
-		for i in np.arange(0, detections.shape[2]):
-			# 提取與以下內容相關的準確值
-			confidence = detections[0, 0, i, 2]
+			# 循環檢測
+			for i in np.arange(0, detections.shape[2]):
+				# 提取與以下內容相關的準確值
+				confidence = detections[0, 0, i, 2]
 
-			# 忽略太小準確值
-			if confidence > args["confidence"]:
-				# 計算（x，y）坐標對象的邊界框
-				idx = int(detections[0, 0, i, 1])
-				box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-				(startX, startY, endX, endY) = box.astype("int")
+				# 忽略太小準確值
+				if confidence > args["confidence"]:
+					# 計算（x，y）坐標對象的邊界框
+					idx = int(detections[0, 0, i, 1])
+					box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+					(startX, startY, endX, endY) = box.astype("int")
 
-				# 選擇特定對象
-				label_name = CLASSES[idx]
-				label_confidence = confidence
-				if label_name == specific_object_name and label_confidence > specific_object_minimum_confidence:
-					# 保存檢測結果圖像
-					if endY > startY and endX > startY:
-						frameList.append(frame[startY:endY, startX:endX])
-					elif startY > endY and startX > endX:
-						frameList.append(frame[endY:startY, endX:startX])
-					# 在框架上繪製
-					label = "{}: {:.2f}%".format(CLASSES[idx],
-						confidence * 100)
-					cv2.rectangle(frame, (startX, startY), (endX, endY),
-						COLORS[idx], 2)
-					y = startY - 15 if startY - 15 > 15 else startY + 15
-					cv2.putText(frame, label, (startX, y),
-						cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
+					# 選擇特定對象
+					label_name = CLASSES[idx]
+					label_confidence = confidence
+					if label_name == specific_object_name and label_confidence > specific_object_minimum_confidence:
+						# 保存檢測結果圖像
+						if endY > startY and endX > startY:
+							frameList.append(frame[startY:endY, startX:endX])
+						elif startY > endY and startX > endX:
+							frameList.append(frame[endY:startY, endX:startX])
+						# 在框架上繪製
+						label = "{}: {:.2f}%".format(CLASSES[idx],
+							confidence * 100)
+						cv2.rectangle(frame, (startX, startY), (endX, endY),
+							COLORS[idx], 2)
+						y = startY - 15 if startY - 15 > 15 else startY + 15
+						cv2.putText(frame, label, (startX, y),
+							cv2.FONT_HERSHEY_SIMPLEX, 0.5, COLORS[idx], 2)
 
-		# 顯示檢測結果影像
-		cv2.imshow("Frame", frame)
-		frameIndex = 1
-		for _frame in frameList:
-			if len(_frame) > 0:
-				_frame = cv2.resize(_frame, (240, 240), interpolation=cv2.INTER_CUBIC)
-				cv2.imshow("Frame"+str(frameIndex), _frame)
-				frameIndex = frameIndex + 1
+			# 顯示檢測結果影像
+			cv2.imshow("Frame", frame)
+			frameIndex = 1
+			for _frame in frameList:
+				if len(_frame) > 0:
+					if len(_frame[0]) > 0:
+						_frame = cv2.resize(_frame, (240, 240), interpolation=cv2.INTER_CUBIC)
+						cv2.imshow("Frame"+str(frameIndex), _frame)
+						frameIndex = frameIndex + 1
 
-		if cv2.waitKey(interval) & 0xFF == ord('q'):
-			break
+			if cv2.waitKey(interval) & 0xFF == ord('q'):
+				break
 
-		# 更新FPS計數器
-		fps.update()
+			# 更新FPS計數器
+			fps.update()
 
 # 停止計時器
 fps.stop()

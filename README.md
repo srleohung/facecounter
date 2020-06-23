@@ -65,3 +65,8 @@ Webcam frame height (Int)
 ```python
 height = 960
 ```
+
+# Reference
+OpenCV data, from https://github.com/opencv/opencv
+
+MobileNetSSD caffemodel, from https://github.com/PINTO0309/MobileNet-SSD-RealSense
