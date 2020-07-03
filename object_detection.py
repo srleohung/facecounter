@@ -76,7 +76,7 @@ while True:
 					label_confidence = confidence
 					if label_name == specific_object_name and label_confidence > specific_object_minimum_confidence:
 						# 保存檢測結果圖像
-						if endY > startY and endX > startY:
+						if endY > startY and endX > startX:
 							frameList.append(frame[startY:endY, startX:endX])
 						elif startY > endY and startX > endX:
 							frameList.append(frame[endY:startY, endX:startX])
