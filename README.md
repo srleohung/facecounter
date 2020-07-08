@@ -23,6 +23,14 @@ Use object_detection.py
 ```bash
 python object_detection.py --prototxt data/MobileNetSSD/MobileNetSSD_deploy.prototxt.txt --model data/MobileNetSSD/MobileNetSSD_deploy.caffemodel
 ```
+Use calibrate_camera.py
+```bash
+python calibrate_camera.py
+```
+Use wide_angle_repair.py
+```bash
+python wide_angle_repair.py
+```
 
 # Parameters
 Overlay image enable (Boolean)
@@ -70,3 +78,7 @@ height = 960
 OpenCV data, from https://github.com/opencv/opencv
 
 MobileNetSSD caffemodel, from https://github.com/PINTO0309/MobileNet-SSD-RealSense
+
+Wide Angle Repair, from https://blog.csdn.net/donkey_1993/article/details/103909811
+
+Calibrate Camera, from https://blog.csdn.net/Thomson617/article/details/103506391
