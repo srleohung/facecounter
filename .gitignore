@@ -130,3 +130,8 @@ dmypy.json
 
 # Test image
 frame*
+
+# Over size data
+data/mpi/
+data/coco/
+data/body_25/
